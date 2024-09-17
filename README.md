@@ -5,7 +5,7 @@
 This package is meant to be an example on how robots needs to be configured in order to support simulating multi robots in the same environment.
 
 ## Platform
-ROS 2 Version: Foxy
+ROS 2 Version: Humble
 
 ## Notes
 
@@ -32,8 +32,20 @@ ROS 2 Version: Foxy
 
 ## Try it!
 
+- Create a workspace, clone this repository and build the package
+```
+mkdir -p ros2_ws/src
+cd ros2_ws/src
+git clone https://github.com/RobInLabUJI/multi_turtlebot_sim
+cd ..
+source /opt/ros/humble/setup.bash
+colcon build
+```
+
 - Launch the standalone simulation, no robot is spawned
 ```
+source /opt/ros/humble/setup.bash
+source ros2_ws/install/setup.bash
 ros2 launch multi_turtlebot_sim standalone_world.launch.py
 ```
 
@@ -41,6 +53,8 @@ Note: By default the empty world is used, you can also use `world_name:=turtlebo
 
 - Spawn a robot using a `robot_prefix` in a particular `x_pose` and `y_pose`.
 ```
+source /opt/ros/humble/setup.bash
+source ros2_ws/install/setup.bash
 ros2 launch multi_turtlebot_sim spawn_turtlebot3.launch.py robot_prefix:=robot1 x_pose:=0.5 y_pose:=0.5
 ```
 The `robot_prefix` will affect both the ros namespace and the tf prefix for that robot
@@ -48,16 +62,20 @@ The `robot_prefix` will affect both the ros namespace and the tf prefix for that
 - Spawn another robot in a different position
 
 ```
+source /opt/ros/humble/setup.bash
+source ros2_ws/install/setup.bash
 ros2 launch multi_turtlebot_sim spawn_turtlebot3.launch.py robot_prefix:=robot2 x_pose:=-0.5 y_pose:=-0.5
 ```
 
 Check how the tf tree is conformed:
 ```
-ros2 run tf2_tools view_frames.py
+source /opt/ros/humble/setup.bash
+ros2 run tf2_tools view_frames
 ```
 
 - The tf tree of each robot aren't connected therefore both robots in rviz can't be seen. As the simulation is starting the odom frame for each robot in the {0,0} world position we can add a static transform between both odometry frames to achieve the full tf_tree all connected.
 
 ```
+source /opt/ros/humble/setup.bash
 ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 robot1/odom robot2/odom
 ```
